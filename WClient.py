@@ -17,7 +17,7 @@ async def cnx(num):
     async with websockets.connect(f'ws://localhost:{random.choice([8080,8081,8082])}') as websocket:
         while True:
             # Prompt the user for a message
-            await asyncio.sleep(random.randrange(0,10))
+            await asyncio.sleep(random.randrange(0,1))
             # Send the message to the server
             message=time.ctime()
             await websocket.send(message)
