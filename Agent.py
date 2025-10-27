@@ -11,7 +11,9 @@ class Agent() :
     self.websocket=ws
     #self.key=Agent.getKey(ws)
     self.msgCount=0
-    self.status='INIT'
+    self.controller=None
+    self.status=self.setStatus('INIT')
+    self.capacities={}
     #Agent.agents[Agent.getKey0(ws)]=self
 
 #---------------------------------------------------------------
@@ -19,16 +21,37 @@ class Agent() :
     return(f'{self.__dict__}')
 
   #---------------------------------------------------------------
-  def capacities(self,capacities) :
+  def setCapacities(self,capacities) :
     print(f'{capacities=}')
+    self.capacities=capacities
     self.node=capacities["node"]
     self.cpu=capacities["cpu"]
     self.mem=capacities["mem"]
     self.tags=capacities.get("tags",[])
+
+  #---------------------------------------------------------------
+  def getCapacity(self,capacity) :
+    return(self.capacities.get(capacity,None))
   
   #---------------------------------------------------------------
   def getMsgCount(self) :
     return(self.msgCount)
+  
+  #---------------------------------------------------------------
+  def getController(self) :
+    return(self.controller)
+  
+  #---------------------------------------------------------------
+  def setController(self,controller) :
+    self.controller=controller
+  
+  #---------------------------------------------------------------
+  def setStatus(self,status) :
+    self.status=status
+  
+  #---------------------------------------------------------------
+  def getStatus(self) :
+    return(self.status)
   
   #---------------------------------------------------------------
   def addMsgCount(self,add=1) :

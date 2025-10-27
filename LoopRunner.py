@@ -28,10 +28,19 @@ class LoopRunner() :
     pass
 
   async def onMessage(self,websocket) :
-    print(f'LoopRunner.onMessage() default registering  {websocket.remote_address=} ')
+    print(f'LoopRunner.onMessage() default should be overrided ')
     async for message in websocket:
       print(f'LoopRunner.onMessage() {self.id=} received  {message=}')
-      await websocket.send(f'{self.id} {message}')
+      await websocket.send(f'{self.id} echo {message}')
+
+  async def _onMessage(self,websocket) :
+    logging.debug(f'LoopRunner._onMessage() contacted by {websocket.remote_address=} ')
+    self.beforeMessage()
+    #async for message in websocket:
+    #  print(f'LoopRunner.onMessage() {self.id=} received  {message=}')
+    #  await websocket.send(f'{self.id} {message}')
+    await self.onMessage(websocket)
+    self.after()
 
 #----------------------------------------------------------------------------
 ##class Controller(LoopRunner) :

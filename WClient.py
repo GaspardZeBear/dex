@@ -7,7 +7,7 @@ import time
 
 async def main():
     tasks = []
-    for i in range(0,10) :
+    for i in range(0,5) :
       tasks.append(asyncio.create_task(cnx(i)))
     await asyncio.wait(tasks)
 
@@ -17,7 +17,7 @@ async def cnx(num):
     async with websockets.connect(f'ws://localhost:{random.choice([8080,8081,8082])}') as websocket:
         while True:
             # Prompt the user for a message
-            await asyncio.sleep(random.randrange(0,1))
+            await asyncio.sleep(random.randrange(10,20))
             # Send the message to the server
             message=time.ctime()
             await websocket.send(message)
