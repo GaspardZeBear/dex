@@ -47,11 +47,27 @@ class Controller(LoopRunner) :
           agent.setCapacities(msg["payload"])
           agent.setStatus('REGISTERED')
           self.agentsByNode[agent.getCapacity("node")]=agent
-          print(f'LoopRunner.onMessage() {self.id=} {Agent.getKey0(websocket)=} registered {key=}',flush=True)
-          await websocket.send(json.dumps({"type":"registered","payload":""}))
+          print(f'Controller.onMessage() {self.id=} {Agent.getKey0(websocket)=} registered {key=}',flush=True)
+          await websocket.send(json.dumps({"cmd":"registered","payload":""}))
       else :
         await websocket.send(f'{self.id}  {Agent.getKey0(websocket)=} {agent.getMsgCount()=} {agent.getKey()=} {message=}')
       #self.afterMessage()
+
+  #----------------------------------------------------------------------------------
+  async def getAgents(self) :
+    str=''
+    for agent in self.agents :
+      str += f'{self.agents=} {agent=}'
+    return(str)
+
+  #----------------------------------------------------------------------------------
+  async def launch(self,payload) :
+    logging.warning(f'Controller.launch() launching {payload=} ')
+    lock=asyncio.Lock()
+    async with lock :
+      await asyncio.sleep(5)
+      logging.warning(f'Controller.launched() done ')
+      return(payload)
 
   #----------------------------------------------------------------------------------
   async def parseMessage(self,message) :
@@ -59,8 +75,8 @@ class Controller(LoopRunner) :
       msg=json.loads(message)
     except ValueError as e:
       return None
-    if 'type' in msg :
-      if msg['type'] == 'capacities' :
+    if 'cmd' in msg :
+      if msg['cmd'] == 'capacities' :
         return('capacities')
       else :
         return None

@@ -1,4 +1,4 @@
-<!doctype html>
+<!doccmd html>
 <html>
     <head>
         <title>WebSocket with Bun and JavaScript</title>
@@ -10,12 +10,12 @@
                     .insertAdjacentHTML("beforeend", "<li>" + text + ";</li>");
             };
             window.onload = function () {
-                echo_service = new WebSocket("ws://127.0.0.1:8080/chat");
+                echo_service = new WebSocket("ws://127.0.0.1:8081");
                 echo_service.onmessage = function (event) {
                     append(event.data);
                 };
                 echo_service.onopen = function () {
-                    append("🚀 Connected to WebSocket!");
+                    append("Connected to WebSocket!");
                 };
                 echo_service.onclose = function () {
                     append("Connection closed");
@@ -25,13 +25,24 @@
                 };
             };
 
-            function sendMessage(event) {
+            function sendStatus(event,id) {
                 console.log(event);
-                let message = document.getElementById("message").value;
+                let message = document.getElementById("statusMsg").value;
                 echo_service.send(message);
             }
+            function sendBookMsg(event,id) {
+                console.log(event);
+                let message = document.getElementById("bookMsg").value;
+                echo_service.send(message);
+            }
+	    function send(event,msgId) {
+                console.log(event);
+                let message = document.getElementById(msgId).value;
+                echo_service.send(message);
+            }
+
         </script>
-        <link
+        <Xlink
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
         />
@@ -39,12 +50,12 @@
 
     <body>
         <main class="container">
-            Message: <input value="Hello!" type="text" id="message" />
-            <input
-                type="button"
-                value="Submit"
-                onclick="sendMessage(event)"
-            /><br />
+            Message: <input value='{"cmd":"status"}' cmd="text" style="width : 800px"  id="statusMsg" />
+            <input cmd="button" value="Submit" onclick="sendStatus(event,'statusMsg')" /><br />
+	    Message: <input value='{"cmd":"launch","payload":{"project":"myProject","resources":{"node":3,"cpu":1,"mem":2,"duration":10}}}' cmd="text" style="width : 800px" id="bookMsg" />
+            <input cmd="button" value="Submit" onclick="sendBookMsg(event,'bookMsg')" /><br />
+	    Message: <input value='{"cmd":"dummy","payload":{"duration":10}}' cmd="text" style="width : 800px" id="dummyMsg" />
+            <input cmd="button" value="Submit" onclick="send(event,'dummyMsg')" /><br />
             <ul id="websocket_events"></ul>
         </main>
     </body>
